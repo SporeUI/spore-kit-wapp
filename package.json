@@ -1,0 +1,22 @@
+{
+  "name": "spore-kit-wapp",
+  "version": "0.0.1",
+  "description": "微信小程序工具函数",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SporeUI/spore-kit-wapp.git"
+  },
+  "author": "TabSpace",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/SporeUI/spore-kit-wapp/issues"
+  },
+  "homepage": "https://github.com/SporeUI/spore-kit-wapp#readme",
+  "dependencies": {
+    "spore-kit-obj": "^0.1.0"
+  }
+}
