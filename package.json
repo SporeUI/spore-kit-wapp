@@ -16,6 +16,12 @@
     "url": "https://github.com/SporeUI/spore-kit-wapp/issues"
   },
   "homepage": "https://github.com/SporeUI/spore-kit-wapp#readme",
+  "files": [
+    "src",
+    "index.js",
+    "README.md",
+    "LICENSE"
+  ],
   "dependencies": {
     "spore-kit-obj": "^0.1.0"
   }
