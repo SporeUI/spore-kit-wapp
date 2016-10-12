@@ -185,11 +185,9 @@ View.prototype = {
 	**/
 	getPage : function(){
 		var top = this.context;
-		do{
-			if(top.context && top.context instanceof View){
-				top = top.context;
-			}
-		}while(top.context);
+		while(top.context && top instanceof View){
+			top = top.context;
+		}
 		return top;
 	},
 	/**
