@@ -1,6 +1,6 @@
 {
   "name": "spore-kit-wapp",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "微信小程序工具函数",
   "main": "index.js",
   "scripts": {
