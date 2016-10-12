@@ -1,5 +1,3 @@
-var $assign = require('spore-kit-obj/src/assign');
-
 /**
 构建一个视图模块，用命名空间的方式完成事件绑定和数据绑定
 @constructor spore-kit-wapp/src/view
@@ -19,12 +17,11 @@ var $assign = require('spore-kit-obj/src/assign');
 // ------------------- /list.wxml -------------------
 
 // ------------------- list.js -------------------
-var $assign = require('spore-kit-obj/src/assign');
 var $view = require('spore-kit-wapp/src/view');
 
 function List(options){
 	
-	var conf = $assign({
+	var conf = Object.assign({
 		context : null,
 		name : 'list'
 	}, options);
@@ -90,40 +87,46 @@ Page({
 // ------------------- /index.js -------------------
 
 **/
-var View = function(options){
 
-	/**
-	选项对象
-	@type {object}
-	@property {object} conf.context 绑定视图组件的根节点
-	@property {string} conf.name 命名空间名称
-	@property {object} conf.model 视图的数据模型
-	**/
-	this.conf = $assign({
-		// 每个视图组件都需要传入 context 作为绑定视图的根节点
-		// context 可以是顶层的 Page , 也可以是一个实例化的 view
-		context : null,
-		// name 参数为组件命名空间名称
-		// 数据将会被绑定到 context.data[name]
-		name : '',
-		// 传入的视图数据模型相当于 view-model
-		data : {}
-	}, options);
+class View {
 
-	this.data = this.conf.data || {};
-	this.context = this.conf.context;
-	
-	// 默认数据模型上提供 ns 属性来标记完整的命名空间路径，便于绑定事件
-	this.name = this.conf.name;
-	this.namespace = this.getNameSpace();
-	this.data.name = this.name;
-	this.data.ns = this.namespace;
+	constructor(options){
+		this.initView(options);
+	}
 
-	//绑定到视图的方法统一存放在 bound 对象
-	this.bound = {};
-};
+	// 初始化视图对象
+	initView(options){
+		/**
+		选项对象
+		@type {object}
+		@property {object} conf.context 绑定视图组件的根节点
+		@property {string} conf.name 命名空间名称
+		@property {object} conf.model 视图的数据模型
+		**/
+		this.conf = Object.assign({
+			// 每个视图组件都需要传入 context 作为绑定视图的根节点
+			// context 可以是顶层的 Page , 也可以是一个实例化的 view
+			context : null,
+			// name 参数为组件命名空间名称
+			// 数据将会被绑定到 context.data[name]
+			name : '',
+			// 传入的视图数据模型相当于 view-model
+			data : {}
+		}, options);
 
-View.prototype = {
+		this.data = this.conf.data || {};
+		this.context = this.conf.context;
+		
+		// 默认数据模型上提供 ns 属性来标记完整的命名空间路径，便于绑定事件
+		this.name = this.conf.name;
+		this.namespace = this.getNameSpace();
+		this.data.name = this.name;
+		this.data.ns = this.namespace;
+
+		//绑定到视图的方法统一存放在 bound 对象
+		this.bound = {};
+	}
+
 	/**
 	设置模型数据
 
@@ -135,19 +138,23 @@ View.prototype = {
 		list : [1,2,3]
 	});
 	**/
-	setData : function(model){
-		var nsdata = {};
+	setData(model){
+		let nsdata = {};
 		if(!this.name){
 			throw('Every view need argument "name" as namespace.');
 		}
-		$assign(this.data, model);
-		var data = $assign({}, this.data);
+
+		Object.assign(this.data, model);
+		var data = Object.assign({}, this.data);
 		nsdata[this.name] = data;
+
 		if(this.context && typeof(this.context.setData) === 'function'){
 			this.context.setData(nsdata);
 		}
+
 		return data;
-	},
+	}
+
 	/**
 	获取命名空间路径，基于 Page 对象
 
@@ -166,8 +173,8 @@ View.prototype = {
 	console.info(view.name);	//child
 	console.info(view.getNameSapce()); //parent.child
 	**/
-	getNameSpace : function(){
-		var parent = '';
+	getNameSpace(){
+		let parent = '';
 		if(this.context && typeof(this.context.getNameSpace) === 'function'){
 			parent = this.context.getNameSpace();
 		}
@@ -177,19 +184,21 @@ View.prototype = {
 		}else{
 			return parent + '.' + this.name;
 		}
-	},
+	}
+
 	/**
 	获取视图所在的 page 对象
 
 	@return {object} 根节点，小程序 Page 方法实例化的对象
 	**/
-	getPage : function(){
-		var top = this.context;
+	getPage(){
+		let top = this.context;
 		while(top.context && top instanceof View){
 			top = top.context;
 		}
 		return top;
-	},
+	}
+
 	/**
 	将事件绑定到根节点，以命名空间路径作为前缀
 	事件函数 self.fn 将会被绑定到 page[ns + ':' + 'fn']
@@ -232,22 +241,22 @@ View.prototype = {
 	</view>
 
 	**/
-	attach : function(){
-		var page = this.getPage();
+	attach(...events){
+		const page = this.getPage();
 		if(!page){return;}
 
-		var namespace = this.namespace;
+		const namespace = this.namespace;
 
-		var args = Array.prototype.slice.call(arguments);
-		args.forEach(function(method){
-			if(typeof this[method] === 'function'){
-				this.bound[method] = function(){
-					this[method].apply(this, arguments);
-				}.bind(this);
-				page[namespace + ':' + method] = this.bound[method];
+		for(let type of events){
+			if(typeof this[type] === 'function'){
+				page[namespace + ':' + type] = this.bound[type] = (...args) => {
+					this[type].apply(this, args);
+				};
 			}
-		}, this);
-	},
+		}
+
+	}
+
 	/**
 	将事件绑定到根节点，以命名空间路径作为前缀
 
@@ -263,26 +272,25 @@ View.prototype = {
 	// 移除所有事件
 	view.detach();
 	**/
-	detach : function(){
-		var page = this.getPage();
+	detach(...events){
+		const page = this.getPage();
 		if(!page){return;}
+		const namespace = this.namespace;
+		events = events.length === 0 ? Object.keys(this.bound) : events;
+		for(let type of events){
+			delete this.bound[type];
+			delete page[namespace + ':' + type];
+		}
+	}
 
-		var namespace = this.namespace;
-
-		var args = Array.prototype.slice.call(arguments);
-		var events = args.length === 0 ? Object.keys(this.bound) : args;
-		events.forEach(function(method){
-			delete this.bound[method];
-			delete page[namespace + ':' + method];
-		}, this);
-	},
 	// 销毁视图对象
-	destroy : function(){
+	destroy(){
 		this.detach();
 		this.model = {};
 		this.setData();
 	}
-};
+
+}
 
 module.exports = View;
 

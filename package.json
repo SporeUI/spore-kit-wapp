@@ -1,6 +1,6 @@
 {
   "name": "spore-kit-wapp",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "微信小程序工具函数",
   "main": "index.js",
   "scripts": {
@@ -22,7 +22,5 @@
     "README.md",
     "LICENSE"
   ],
-  "dependencies": {
-    "spore-kit-obj": "^0.1.1"
-  }
+  "dependencies": {}
 }
