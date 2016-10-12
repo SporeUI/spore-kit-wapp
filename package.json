@@ -23,6 +23,6 @@
     "LICENSE"
   ],
   "dependencies": {
-    "spore-kit-obj": "0.1.0"
+    "spore-kit-obj": "^0.1.0"
   }
 }
