@@ -19,35 +19,31 @@
 // ------------------- list.js -------------------
 var $view = require('spore-kit-wapp/src/view');
 
-function List(options){
-	
-	var conf = Object.assign({
-		context : null,
-		name : 'list'
-	}, options);
+class List extends $view {
 
-	var data = {
-		list : [0, 1, 2]
-	};
+	constructor(options){
+		super(
+			Object.assign({
+				context : null,
+				name : 'list',
+				data: {
+					list : [0, 1, 2]
+				}
+			}, options)
+		);
 
-	var self = new $view({
-		context : conf.context,
-		name : conf.name,
-		data : data
-	});
+		this.setData();
+		this.attach(
+			'add'
+		);
+	}
 
-	self.add = function(){
-		data.list.push(data.list.length);
-		self.setData();
-	};
-
-	self.setData();
-
-	self.attach(
-		'add'
-	);
-
-	return self;
+	add(){
+		this.data.list.push(
+			this.data.list.length
+		);
+		this.setData();
+	}
 
 }
 
@@ -71,13 +67,13 @@ Page({
 	onLoad: function() {
 
 		// 数据被绑定在 this.data.list1
-		$list({
+		this.list1 = new $list({
 			context : this,
 			name : 'list1'
 		});
 
 		// 数据被绑定在 this.data.list2
-		$list({
+		this.list2 = new $list({
 			context : this,
 			name : 'list2'
 		});
