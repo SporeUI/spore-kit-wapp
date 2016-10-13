@@ -17,9 +17,9 @@
 // ------------------- /list.wxml -------------------
 
 // ------------------- list.js -------------------
-const $view = require('spore-kit-wapp/src/view');
+import {View} from 'spore-kit-wapp';
 
-class List extends $view {
+class List extends View {
 
 	constructor(options){
 		super(
@@ -59,7 +59,7 @@ module.exports = List;
 // ------------------- /index.wxml -------------------
 
 // ------------------- index.js -------------------
-const $list = require('./list');
+import {List} from './list';
 
 // 在 Page 中绑定视图对象
 Page({
@@ -67,13 +67,13 @@ Page({
 	onLoad: function() {
 
 		// 数据被绑定在 this.data.list1
-		this.list1 = new $list({
+		this.list1 = new List({
 			context : this,
 			name : 'list1'
 		});
 
 		// 数据被绑定在 this.data.list2
-		this.list2 = new $list({
+		this.list2 = new List({
 			context : this,
 			name : 'list2'
 		});
@@ -84,7 +84,7 @@ Page({
 
 **/
 
-class View {
+export class View {
 
 	constructor(options){
 		this.initView(options);
@@ -287,6 +287,4 @@ class View {
 	}
 
 }
-
-module.exports = View;
 

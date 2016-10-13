@@ -1,1 +1,1 @@
-exports.view = require('src/view');
+export {View} from './src/view';
