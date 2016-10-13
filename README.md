@@ -1,5 +1,5 @@
 # spore-kit-wapp
-微信小程序工具函数
+微信小程序工具函数 [ES6]
 
 ## Getting Started
 
