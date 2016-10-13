@@ -17,7 +17,7 @@
 // ------------------- /list.wxml -------------------
 
 // ------------------- list.js -------------------
-var $view = require('spore-kit-wapp/src/view');
+const $view = require('spore-kit-wapp/src/view');
 
 class List extends $view {
 
@@ -59,7 +59,7 @@ module.exports = List;
 // ------------------- /index.wxml -------------------
 
 // ------------------- index.js -------------------
-var $list = require('./list');
+const $list = require('./list');
 
 // 在 Page 中绑定视图对象
 Page({
@@ -141,7 +141,7 @@ class View {
 		}
 
 		Object.assign(this.data, model);
-		var data = Object.assign({}, this.data);
+		let data = Object.assign({}, this.data);
 		nsdata[this.name] = data;
 
 		if(this.context && typeof(this.context.setData) === 'function'){
@@ -156,12 +156,12 @@ class View {
 
 	@return {string} 路径字符串
 	@example
-	var parentView = new View({
+	let parentView = new View({
 		context : page,
 		name : 'parent'
 	});
 
-	var view = new View({
+	let view = new View({
 		context : parentView,
 		name : 'cihld'
 	});
@@ -203,7 +203,7 @@ class View {
 	@example
 
 	// js
-	var view = new View({
+	let view = new View({
 		context : page,
 		name : 'demo'
 	});
