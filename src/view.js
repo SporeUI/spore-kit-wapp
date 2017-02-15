@@ -83,15 +83,14 @@ Page({
 // ------------------- /index.js -------------------
 
 **/
+export default class View {
 
-export class View {
-
-	constructor(options){
+	constructor(options) {
 		this.initView(options);
 	}
 
 	// 初始化视图对象
-	initView(options){
+	initView(options) {
 		/**
 		选项对象
 		@type {object}
@@ -102,24 +101,24 @@ export class View {
 		this.conf = Object.assign({
 			// 每个视图组件都需要传入 context 作为绑定视图的根节点
 			// context 可以是顶层的 Page , 也可以是一个实例化的 view
-			context : null,
+			context: null,
 			// name 参数为组件命名空间名称
 			// 数据将会被绑定到 context.data[name]
-			name : '',
+			name: '',
 			// 传入的视图数据模型相当于 view-model
-			data : {}
+			data: {}
 		}, options);
 
 		this.data = this.conf.data || {};
 		this.context = this.conf.context;
-		
+
 		// 默认数据模型上提供 ns 属性来标记完整的命名空间路径，便于绑定事件
 		this.name = this.conf.name;
 		this.namespace = this.getNameSpace();
 		this.data.name = this.name;
 		this.data.ns = this.namespace;
 
-		//绑定到视图的方法统一存放在 bound 对象
+		// 绑定到视图的方法统一存放在 bound 对象
 		this.bound = {};
 	}
 
@@ -134,17 +133,17 @@ export class View {
 		list : [1,2,3]
 	});
 	**/
-	setData(model){
+	setData(model) {
 		let nsdata = {};
-		if(!this.name){
-			throw('Every view need argument "name" as namespace.');
+		if (!this.name) {
+			throw (new Error('Every view need argument "name" as namespace.'));
 		}
 
 		Object.assign(this.data, model);
 		let data = Object.assign({}, this.data);
 		nsdata[this.name] = data;
 
-		if(this.context && typeof(this.context.setData) === 'function'){
+		if (this.context && typeof this.context.setData === 'function') {
 			this.context.setData(nsdata);
 		}
 
@@ -169,15 +168,15 @@ export class View {
 	console.info(view.name);	//child
 	console.info(view.getNameSapce()); //parent.child
 	**/
-	getNameSpace(){
+	getNameSpace() {
 		let parent = '';
-		if(this.context && typeof(this.context.getNameSpace) === 'function'){
+		if (this.context && typeof this.context.getNameSpace === 'function') {
 			parent = this.context.getNameSpace();
 		}
 
-		if(!parent){
+		if (!parent) {
 			return this.name;
-		}else{
+		} else {
 			return parent + '.' + this.name;
 		}
 	}
@@ -187,9 +186,9 @@ export class View {
 
 	@return {object} 根节点，小程序 Page 方法实例化的对象
 	**/
-	getPage(){
+	getPage() {
 		let top = this.context;
-		while(top.context && top instanceof View){
+		while (top.context && top instanceof View) {
 			top = top.context;
 		}
 		return top;
@@ -237,19 +236,21 @@ export class View {
 	</view>
 
 	**/
-	attach(...events){
+	attach(...events) {
 		const page = this.getPage();
-		if(!page){return;}
+		if (!page) {
+			return;
+		}
 
 		const namespace = this.namespace;
 
-		for(let type of events){
-			if(typeof this[type] === 'function'){
+		events.forEach(type => {
+			if (typeof this[type] === 'function') {
 				page[namespace + ':' + type] = this.bound[type] = (...args) => {
 					this[type].apply(this, args);
 				};
 			}
-		}
+		});
 
 	}
 
@@ -268,19 +269,21 @@ export class View {
 	// 移除所有事件
 	view.detach();
 	**/
-	detach(...events){
+	detach(...events) {
 		const page = this.getPage();
-		if(!page){return;}
+		if (!page) {
+			return;
+		}
 		const namespace = this.namespace;
 		events = events.length === 0 ? Object.keys(this.bound) : events;
-		for(let type of events){
+		events.forEach(type => {
 			delete this.bound[type];
 			delete page[namespace + ':' + type];
-		}
+		});
 	}
 
 	// 销毁视图对象
-	destroy(){
+	destroy() {
 		this.detach();
 		this.model = {};
 		this.setData();
