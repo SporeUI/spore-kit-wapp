@@ -19,7 +19,7 @@
 // ------------------- list.js -------------------
 import {View} from 'spore-kit-wapp';
 
-class List extends View {
+export class List extends View {
 
 	constructor(options){
 		super(
@@ -46,8 +46,6 @@ class List extends View {
 	}
 
 }
-
-module.exports = List;
 // ------------------- /list.js -------------------
 
 // ------------------- index.wxml -------------------
